@@ -1,0 +1,5 @@
+package com.phone.safe.user;
+
+public class UserAction {
+
+}

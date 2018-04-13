@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理员登陆界面</title>
+<!-- 引入bootstrap -->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script>
+<script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
+<style type="text/css">
+.mycontainer{
+	margin-top: 100px;
+	width: 20em;
+
+}
+
+
+</style>
+
+</head>
+<body>
+	<div class="container mycontainer">
+
+		<form class="form-horizontal" action="Adminlogin" method="POST">
+			<div class="form-group">
+			    <div class="input-group">
+      				<div class="input-group-addon">
+      				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+      				</div>
+					<input type="text" class="form-control" id="inputuser" name="username"
+						placeholder="请输入用户名" required="required" pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" title="只能是数字字母下划线，长度5-16位"/>
+						</div>
+						
+			</div>
+			<div class="form-group">
+					<div class="input-group">
+      				<div class="input-group-addon">
+      				<span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+      				</div>
+					<input type="password" class="form-control" id="inputPassword" name="password"
+						placeholder="请输入密码" required="required" pattern="^[a-zA-Z][a-zA-Z0-9_]{4,15}$" title="只能是数字字母下划线，长度5-16位">
+					</div>	
+						
+			</div>
+			<div class="form-group">
+
+					<button type="submit" class="btn btn-default btn-block">登录</button>
+
+			</div>
+		</form>
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 引入bootstrap -->
+<link href="/PhoneSafe/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+
+
+<!-- 引入summernote -->
+<link href="/PhoneSafe/dist/summernote.css" rel="stylesheet"/>
+<script src="/PhoneSafe/dist/summernote.js"></script>
+<script src="/PhoneSafe/dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
+
+<script type="text/javascript">
+
+$(function(){
+	
+	//初始化富文本编辑框
+	$(".summernote").summernote({
+        height: 200,
+        tabsize: 1,
+        lang: 'zh-CN',
+        callbacks: {  
+            onImageUpload: function(files) { //the onImageUpload API  
+                img = sendFile(files[0]);  
+        }  
+    }  
+    
+ });
+	
+ 
+	
+	
+$('#yulan').modal({backdrop: 'static', keyboard: false});
+
+	
+});
+
+
+function sendFile(file) {  
+    data = new FormData();  
+    data.append("file", file);  
+    console.log(data);  
+    $.ajax({  
+        data: data,  
+        type: "POST",  
+        url: "picute/jpg.jpg",  
+        cache: false,  
+        contentType: false,  
+        processData: false,  
+        success: function(url) {  
+        		
+              $(".summernote").summernote('insertImage', "http://localhost:8080/test/picute/jpg.jpg", 'image name'); // the insertImage API  
+        }  
+    });  
+} 
+
+
+
+
+function add(){//添加文章按钮激活
+	var title = $('#showtitle').val();//获取文章标题
+	var content = $('#content').summernote('code');//获取文章内容
+	
+	if(title != "" && content != ""){
+		//alert(title);
+		//alert(content);//执行新建文章操作
+		//addArticle?art.title=123&art.content=456
+		$.post("admin/addArticle",
+				{"art.title" : title,"art.content" : content},
+				function (data){
+					if(data.flag == 1){
+						alert('添加成功');
+						window.location.href='ArtcleList';
+						
+					}
+					
+					
+					
+				},
+				"json"
+				);
+		
+		
+				
+				
+		
+		
+		//
+	}
+	else{
+		
+		$('#yulan').modal({backdrop: 'static', keyboard: false});
+		alert("标题或者内容不能为空!");
+	}
+	
+
+	
+}
+
+
+
+</script>
+
+</head>
+<body>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="yulan">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">添加新文章</h4>
+      </div>
+      <div class="modal-body">
+      	<label for="showtitle">标题</label>
+      	<input id="showtitle" type="text" class="form-control" placeholder="请输入文章标题">
+        <div class="summernote" id="content">此处写文章内容</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="add()">添加</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

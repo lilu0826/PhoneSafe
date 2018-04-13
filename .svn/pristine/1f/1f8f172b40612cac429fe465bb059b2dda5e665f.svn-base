@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>多模式手机安全App网页后台</title>
+<!-- 引入bootstrap -->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+
+
+
+
+
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-inverse container">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">导航</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#" >首页</a></li>
+        <li><a href="#">文章管理</a></li>
+        <li><a href="#">用户管理</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://baidu.com" target="myFrameName">退出登录</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+  <div class="container">
+    
+    
+    
+    
+    
+    
+    <iframe id="myFrameId" name="myFrameName">
+    
+    </iframe> 
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

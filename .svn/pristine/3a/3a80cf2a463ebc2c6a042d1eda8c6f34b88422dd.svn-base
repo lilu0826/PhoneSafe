@@ -1,0 +1,61 @@
+package com.phone.safe.api.action;
+
+
+import java.util.List;
+
+import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+import com.phone.safe.JDBC.JDBCTools;
+import com.phone.safe.JavaBeans.Article;
+
+public class GetALLArticle extends ActionSupport {
+
+	private static final long serialVersionUID = 3018839018778938798L;
+	private List<Article> articleList;//
+	private int tid;
+	private Article showArt;
+	
+	
+
+	@Override
+	public String execute() {
+		this.articleList = JDBCTools.getALLArticle();
+		String ip = ServletActionContext.getRequest().getServerName();
+		//System.out.println(ip);
+		for (Article article : articleList) {
+			
+			article.setUrl("http://"+ip+":8080/PhoneSafe/showArticle?tid="+article.getId());
+		}
+		return Action.SUCCESS;
+	}
+//展示专用接口
+	public String showArtitle() {
+		this.articleList = JDBCTools.getALLArticle();
+		for (Article article : articleList) {
+			if(article.getId() == this.tid) {
+				this.showArt = article;
+				break;
+			}
+		}
+		
+
+		return Action.SUCCESS;
+	}
+	
+	
+	
+	public List<Article> getArticleList() {
+		return articleList;
+	}
+	public int getTid() {
+		return tid;
+	}
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+	public Article getShowArt() {
+		return showArt;
+	}
+}

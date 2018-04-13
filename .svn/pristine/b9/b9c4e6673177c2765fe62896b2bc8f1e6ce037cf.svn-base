@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script src="bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script>
+
+<script type="text/javascript">
+
+$(getContext());
+
+
+	function getContext(){
+		$.get("getContext",
+				function (data){
+				$("#message").text(data.result);
+				setTimeout(() => {
+					getContext();
+				}, 1000);
+				},
+			"json"
+			);
+	}
+	
+
+
+function submit(){
+	var content = $("#sendMessage").val();
+	
+	$.post("getContext",
+			{"name" : "忠胜大爷","message" : content},
+			function (data){
+				if(data.result == "yes"){
+					$("#sendMessage").val("");
+					
+				}
+				
+				
+				
+			},
+			"json"
+			);
+}
+
+
+
+
+
+</script>
+
+
+
+
+</head>
+<body>
+<textarea rows="5" cols="100" id="message">嗯嗯</textarea><br>
+<textarea rows="5" cols="50" id="sendMessage"></textarea>
+<button id="submim" onclick="submit()">发送消息</button>
+
+
+</body>
+</html>

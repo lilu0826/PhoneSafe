@@ -1,0 +1,185 @@
+package com.phone.safe.JDBC;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.phone.safe.JavaBeans.Article;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+public class JDBCTools {
+	//获取数据库连接
+	private static Connection getConn() {
+		
+	    String driver = "com.mysql.jdbc.Driver";
+	    String url = "jdbc:mysql://localhost:3306/phonesafe";
+	    String username = "root";
+	    String password = "root";
+	    Connection conn = null;
+	    try {
+	        Class.forName(driver); //classLoader,加载对应驱动
+	        conn = (Connection) DriverManager.getConnection(url, username, password);
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return conn;
+	}
+	
+	//检查手机号是否存在,存在就修改用户验证码,不存在就创建一天记录1成功0失败
+	public static int setverify(String num,String verfy) {
+		
+		int result = 0;//返回结果
+	    int Code = 0;//状态码
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select count(*) from user_table where user_num=?";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        pstmt.setString(1, num);//设置对位标志符号
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	Code = rs.getInt(1);//0没有用户,需要插入,1为存在用户放入验证码
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    if(Code == 0) {//新添加用户
+	    	Connection conn = getConn();
+	        String sql = "insert into user_table(user_num,user_psw) values(?,?)";
+	        PreparedStatement pstmt;
+	        try {
+	            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+	            pstmt.setString(1, num);
+	            pstmt.setString(2, verfy);
+	            result = pstmt.executeUpdate();
+	            pstmt.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    else {//已有功能修改新的验证码
+	    	Connection conn = getConn();
+	        String sql = "update user_table set user_psw=? where user_num=?";
+	        PreparedStatement pstmt;
+	        try {
+	            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+	            pstmt.setString(1, verfy);
+	            pstmt.setString(2, num);
+	            result = pstmt.executeUpdate();
+	            pstmt.close();
+	            conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return result;
+}	
+	
+	//用手机号和验证码登录1成功,0失败
+	public static int login(String num,String verfy) {
+		int result = 0;//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select count(*) from user_table where user_num=? and user_psw=?";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        pstmt.setString(1, num);//设置对位标志符号
+	        pstmt.setString(2, verfy);//设置对位标志符号
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	result = rs.getInt(1);//1成功,0失败
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	//清空用户验证码并插入token
+	public static int inserToken(String num,String token) {
+		int result=0;
+		Connection conn = getConn();
+        String sql = "update user_table set user_token=?,user_psw='' where user_num=?";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            pstmt.setString(1, token);
+            pstmt.setString(2, num);
+            result = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+    return result;
+}
+	//获取所有文章数据
+	public static List<Article> getALLArticle(){
+		List<Article> result = new ArrayList<Article>();//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select * from article_table";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	Article article = new Article();
+	        	article.setTitle(rs.getString(1));
+	        	
+	        	article.setAbstracts(rs.getString(2));
+	        	
+	        	article.setContent(rs.getString(3));
+	        	
+	        	result.add(article);
+	        	
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	//通过token取得user_num(失败返回null,成功返回user_num)
+	public static String getNumFromToken(String token) {
+		String result = null;//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select user_num from user_table where user_token=?";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        pstmt.setString(1, token);//设置对位标志符号
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	result = rs.getString(1);//0没有用户,需要插入,1为存在用户放入验证码
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }	
+		
+		
+		return result;
+		
+		
+	}
+	public static void main(String[] args) {
+		System.out.println(getNumFromToken("2c535f1f0e50b1855224bfd8dddb929f"));
+		
+		
+	}
+	
+	
+	
+}
+

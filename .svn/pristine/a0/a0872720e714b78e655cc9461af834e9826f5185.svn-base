@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+
+
+<!-- 引入bootstrap -->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+
+
+<!-- 引入summernote -->
+<link href="dist/summernote.css" rel="stylesheet"/>
+<script src="dist/summernote.js"></script>
+<script src="dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
+
+<style>
+	.m{ width: 800px; margin-left: auto; margin-right: auto; 	
+	}
+	
+</style>
+<script>
+var json;
+
+$(function(){
+	$.get("api/GetArticle",
+			function(data){
+		json = data.articleList;//获取文章数据
+		
+		for(var i = 0; i < json.length; i++) {//遍历出每一行都是三列 每一列放不同的属性名第一列姓名 第二列姓别
+			/* s = "<tr><td>" + json[i].id + "</td><td><div class='summernote'>" +
+			json[i].content + "</div></td>"+   + "</tr>"; */
+			var s = $("#temp").clone();
+			s.find("#id").text(json[i].id);
+			s.find("#title").text(json[i].title); 
+			//s.find("#edit").attr("href","editArt?id="+json[i].id);
+			//s.find("#del").attr("href","delArt?id="+json[i].id);
+			$("#tab").append(s);//在表里再加遍历出的每一行
+			
+			
+			}
+			$("#temp").remove();//删除临时的
+			
+			
+			$(".btn-success").click(function (){
+				var tid = $(this).parent().prevAll("#id").text();
+				for(var i = 0; i < json.length; i++){
+					if(json[i].id == tid){
+						//设置文章内容
+						$(".summernote").summernote("code",json[i].content);
+						//设置文章标题
+						$('#showtitle').val(json[i].title);
+						//传递文章id
+						$('#yulan').modal().data("id",tid);
+					}
+				}
+				
+			});
+			
+			$(".btn-danger").click(function (){
+				var tid = $(this).parent().prevAll("#id").text();//获取文章id
+				alert(tid);			//执行删除文章
+				$(this).parent().parent().remove();//删除当前结点
+				alert("删除成功");
+			});
+			
+	    
+	}
+	    );
+	//初始化富文本编辑框
+	$(".summernote").summernote({
+        height: 200,
+        tabsize: 1,
+        lang: 'zh-CN',
+        callbacks: {  
+            onImageUpload: function(files) { //the onImageUpload API  
+                img = sendFile(files[0]);  
+        }  
+    }  
+    
+ });	
+//	
+
+
+
+
+});
+
+
+
+function sendFile(file) {  
+    data = new FormData();  
+    data.append("file", file);  
+    console.log(data);  
+    $.ajax({  
+        data: data,  
+        type: "POST",  
+        url: "picute/jpg.jpg",  
+        cache: false,  
+        contentType: false,  
+        processData: false,  
+        success: function(url) {  
+        		
+              $(".summernote").summernote('insertImage', "http://localhost:8080/test/picute/jpg.jpg", 'image name'); // the insertImage API  
+        }  
+    });  
+}  
+
+function save(){
+	//获取新的文章内容
+	var tid = $('#yulan').data("id");
+	var code = $(".summernote").summernote("code");
+	var title = $('#showtitle').val();
+	alert(tid);
+	alert(code);
+	alert(title);
+	//向后台提交更改
+	
+}
+
+
+
+
+
+</script>
+</head>
+
+<body>
+	<table class="table table-bordered" id="tab">
+		<tr>
+			<th>文章ID</th>
+			<th>文章标题</th>
+			<th>操作</th>
+		</tr>
+
+		<tr id="temp">
+			<td id="id">1001</td>
+			<td id="title"></td>
+			<td>
+			<a id="look" class="btn btn-default btn-sm btn-success" href="#" >查看</a>
+			<a id="del" class="btn btn-default btn-sm btn-danger"  href="#" >刪除</a>
+			</td>
+			
+		</tr>
+
+	</table>
+<div class="modal fade" tabindex="-1" role="dialog" id="yulan">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">查看文章内容</h4>
+      </div>
+      <div class="modal-body">
+      	<label for="showtitle">标题</label>
+      	<input id="showtitle" type="text" class="form-control" placeholder="请输入文章标题">
+        <div class="summernote" id="content">预览富文本框</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="save()">关闭并保存</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+	
+	
+	
+	
+	
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 引入bootstrap -->
+<link href="/PhoneSafe/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+
+<script type="text/javascript">
+
+$(function(){
+
+	//弹出模态对话框,让用户登录
+$('#yulan').modal({backdrop: 'static', keyboard: false});
+
+	
+	
+	$("#GetVerify").click(function(){
+		var SafeNum = $("#Num").val();
+		if(SafeNum != ""){
+			
+			
+		}
+		
+		
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+});
+
+
+
+
+
+
+
+function add(){//添加文章按钮激活
+	var title = $('#showtitle').val();//获取文章标题
+	var content = "";//$('#content').summernote('code');//获取文章内容
+	
+	if(title != "" && content != ""){
+		//alert(title);
+		//alert(content);//执行新建文章操作
+		//addArticle?art.title=123&art.content=456
+		$.post("addArticle",
+				{"art.title" : title,"art.content" : content},
+				function (data){
+					if(data.flag == 1){
+						alert('添加成功');
+						window.location.href='ArtcleList';
+						
+					}
+					
+					
+					
+				},
+				"json"
+				);
+		
+		
+				
+				
+		
+		
+		//
+	}
+	else{
+		
+		$('#yulan').modal({backdrop: 'static', keyboard: false});
+		alert("标题或者内容不能为空!");
+	}
+	
+
+	
+}
+
+
+
+</script>
+
+</head>
+<body>
+
+	<h1>这里是标题哦</h1>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="yulan">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">请先登录</h4>
+      </div>
+		<div class="modal-body">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label for="Num" class="col-sm-3 control-label">安全手机号码:</label> 
+					<div class="col-sm-6">
+						<input type="number" class="form-control" id="Num" placeholder="请输入安全手机号码">
+					</div>
+					<div class="col-sm-3">
+						<button id="GetVerify" class="btn btn-default">发送验证码</button>
+					</div>	
+				</div>
+				
+				<div class="form-group">
+					<label for="SafeNum" class="col-sm-3 control-label">验证码:</label>
+				
+					<div class="col-sm-3">
+						<input
+						id="Verify" type="number" class="form-control"
+						placeholder="请输入验证码">
+					</div>
+			</div>	
+			</div>
+				</div>
+				<div class="modal-footer">
+        <button type="button" class="btn btn-default">登录</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

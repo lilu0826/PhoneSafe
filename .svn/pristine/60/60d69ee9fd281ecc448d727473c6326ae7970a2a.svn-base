@@ -1,0 +1,134 @@
+package com.phone.safe.api.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+
+import java.io.InputStream;
+
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+import com.phone.safe.JDBC.JDBCTools;
+
+
+
+public class FileUpload extends ActionSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9107659704079839769L;
+//	private static final long serialVersionUID = 1L;
+    private File upload;//上传文件  
+    private String uploadContentType;//上传文件类型  
+    private String uploadFileName;//上传文件名 
+    
+    private String token;//用户的口令
+    private int flag;//标志 
+    private String msg;//提示信息 
+    
+    
+    @Override
+	public String execute() {
+        System.out.println("fileName:"+this.getUploadFileName());
+        System.out.println("contentType:"+this.uploadContentType);
+        System.out.println("File:"+this.upload);
+//        String realPath=ServletActionContext.getServletContext().getRealPath("/picture");
+//        System.out.println(realPath);
+        
+        int user_num = 0;
+		try {
+			InputStream  inputFile =new FileInputStream(upload);
+			user_num = JDBCTools.setBlob(token, inputFile);
+			inputFile.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        if(user_num == 1) {
+            flag = 1;
+            msg = "图片上传成功!";
+            
+        }
+        else {
+            flag = 0;
+            msg = "图片上传失败!";
+        }
+
+        
+        
+        
+
+        
+		return Action.SUCCESS;
+		
+	}
+
+
+
+
+	public File getUpload() {
+		return upload;
+	}
+
+
+
+
+	public void setUpload(File upload) {
+		this.upload = upload;
+	}
+
+
+
+
+	public String getUploadContentType() {
+		return uploadContentType;
+	}
+
+
+
+
+	public void setUploadContentType(String uploadContentType) {
+		this.uploadContentType = uploadContentType;
+	}
+
+
+
+
+	public String getUploadFileName() {
+		return uploadFileName;
+	}
+
+
+
+
+	public void setUploadFileName(String uploadFileName) {
+		this.uploadFileName = uploadFileName;
+	}
+
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+
+
+
+	public int getFlag() {
+		return flag;
+	}
+
+
+
+
+
+	
+	
+}

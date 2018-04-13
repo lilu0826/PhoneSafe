@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+
+
+<!-- 引入bootstrap -->
+<link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+
+
+<!-- 引入summernote -->
+<link href="dist/summernote.css" rel="stylesheet"/>
+<script src="dist/summernote.js"></script>
+<script src="dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
+
+<style>
+	.m{ width: 800px; margin-left: auto; margin-right: auto; 	
+	}
+	
+</style>
+<script>
+
+var json = [
+	{ "id": "1001", "content": "第一篇文章标题" },
+	{ "id": "1002", "content": "第二篇文章标题" }
+	];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$(function(){
+	
+	
+
+	
+	
+	
+	for(var i = 0; i < json.length; i++) {//遍历出每一行都是三列 每一列放不同的属性名第一列姓名 第二列姓别
+	/* s = "<tr><td>" + json[i].id + "</td><td><div class='summernote'>" +
+	json[i].content + "</div></td>"+   + "</tr>"; */
+	var s = $("#temp").clone();
+	s.find("#id").text(json[i].id);
+	s.find("#content").text(json[i].content); 
+	s.find("#edit").attr("href","editArt?id="+json[i].id);
+	s.find("#del").attr("href","delArt?id="+json[i].id);
+	$("#tab").append(s);//在表里再加遍历出的每一行
+	
+	
+	}
+	$("#temp").remove();//删除临时的
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+ $('.summernote').summernote({
+        height: 80,
+        tabsize: 2,
+        lang: 'zh-CN',
+        callbacks: {  
+            onImageUpload: function(files) { //the onImageUpload API  
+                img = sendFile(files[0]);  
+        }  
+    }  
+    
+ });
+});
+
+function sendFile(file) {  
+    data = new FormData();  
+    data.append("file", file);  
+    console.log(data);  
+    $.ajax({  
+        data: data,  
+        type: "POST",  
+        url: "picute/jpg.jpg",  
+        cache: false,  
+        contentType: false,  
+        processData: false,  
+        success: function(url) {  
+        		
+              $(".summernote").summernote('insertImage', "http://localhost:8080/test/picute/jpg.jpg", 'image name'); // the insertImage API  
+        }  
+    });  
+}  
+
+function submit(){
+	var Code = $(".summernote").summernote("code");
+	alert(Code);
+}
+
+
+</script>
+</head>
+
+<body>
+	<table class="table table-bordered" id="tab">
+		<tr>
+			<th>文章ID</th>
+			<th>文章标题</th>
+			<th>操作</th>
+		</tr>
+
+		<tr id="temp">
+			<td id="id">1001</td>
+			<td id="content">标题</td>
+			<td>
+			<a id="edit" class="btn btn-default btn-sm btn-warning" href="#" >编辑</a>
+			<a id="del" class="btn btn-default btn-sm btn-danger"  href="#" >刪除</a>
+			</td>
+		</tr>
+
+	</table>
+	
+	<div class="summernote">文章标题</div>
+</body>
+</html>

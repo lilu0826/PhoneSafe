@@ -1,0 +1,24 @@
+package com.phone.safe.converter;
+
+import java.util.Map;
+
+import org.apache.struts2.util.StrutsTypeConverter;
+
+public class Userconverter extends StrutsTypeConverter {
+
+	@Override
+	public Object convertFromString(Map arg0, String[] arg1, Class arg2) {
+		// TODO Auto-generated method stub
+		System.out.println(arg1);
+		return "转换";
+	}
+
+	@Override
+	public String convertToString(Map arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		return "转换后的";
+	}
+
+
+
+}

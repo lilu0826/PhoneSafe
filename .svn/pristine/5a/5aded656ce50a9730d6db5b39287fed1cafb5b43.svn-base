@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 设置文件临时目录 -->
+	<constant name="struts.multipart.saveDir" value="C:\\Temp"/>
+ 	<constant name="struts.custom.i18n.resources" value="mess"></constant>
+     
+ 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="true" />
+	
+	
+	
+	<!-- 前端APP使用的包 -->
+	<package name="apijson" namespace="/api" extends="json-default">
+		<!-- 用户登录Action -->
+		<action name="login" class="com.phone.safe.api.action.loginAction">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">user</param>
+			</result>
+		</action>
+		<!-- 获取验证码 -->
+		<action name="GetVerify" class="com.phone.safe.api.action.GetVerifyAction">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">user_num</param>
+			</result>
+		</action>
+		<!-- 获取所有文章数据-->
+		<action name="GetArticle" class="com.phone.safe.api.action.GetALLArticle">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties"></param>
+			</result>
+		</action>	
+		<!-- 上传图片-->
+		<action name="fileupload" class="com.phone.safe.api.action.FileUpload">
+ 			<interceptor-ref name="defaultStack">
+                <param name="fileUpload.maximumSize">500000</param>
+                <param name="fileUpload.allowedTypes">image/jpeg,image/png,image/gif</param>
+                <param name="fileUpload.allowedExtensions">.jpg,.png,.gif</param>
+            </interceptor-ref>
+			
+			<result type="json">
+			<param name="noCache">true</param>
+			<param name="excludeProperties">upload,uploadContentType,uploadFileName,token</param>
+			</result>
+			
+			<result name="input" type="json">
+			<param name="noCache">true</param>
+			<param name="excludeProperties">upload,uploadContentType,uploadFileName,token</param>
+			</result>
+		</action>
+		<!-- 下载图片 -->
+		<action name="GetPicture" class="com.phone.safe.api.action.FileDownload">
+			<result type="stream">
+			<param name="contentType">image/jpg</param>
+			<param name="inputName">picture</param>
+			<param name="contentDisposition">filename="picture.jpg"</param>
+			<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		<!-- 设置安全手机号 -->
+		<action name="SetSafeNum" class="com.phone.safe.api.action.SetSafeNum">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">token,safe_num</param>
+			</result>
+		</action>
+		<!-- 设置位置 -->
+		<action name="SetPosition" class="com.phone.safe.api.action.SetPosition">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">token,position</param>
+			</result>
+		</action>
+		<!-- 获取位置 -->
+		<action name="GetPosition" class="com.phone.safe.api.action.GetPosition">
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">token</param>
+			</result>
+		</action>
+		<!-- 获取安全手机号 -->
+		<action name="GetSafeNum" class="com.phone.safe.api.action.GetSafeNum">
+			<result type="json">
+				<param name="noCache">true</param>
+				<!-- <param name="root">returndata</param> -->
+				<param name="excludeProperties">token</param>
+			</result>
+		</action>
+	</package>
+
+	
+	
+	
+	
+	<!-- 管理员登录操作专用 -->
+    <package name="admin" namespace="/admin" extends="json-default">
+
+		
+		<!-- 需要权限控制 -->
+		<interceptors>  
+            <interceptor name="testInterceptor" class="com.phone.safe.interceptor.ContrlIntercepter"></interceptor>  
+            <!-- 一个拦截器栈中可以定义多个拦截器 -->  
+            <interceptor-stack name="testStack">  
+                <interceptor-ref name="testInterceptor" />  
+                <interceptor-ref name="defaultStack" />  
+            </interceptor-stack>  
+        </interceptors>  
+
+		<global-results>
+			<result name="error">/Error.jsp</result>
+		</global-results>
+		
+
+		<!-- 登录页面没有权限控制 -->
+        <action name="Login">
+        	 <result>/WEB-INF/Admin/Login.jsp</result>
+        </action>
+		
+		
+		<!-- //删除文章接口 -->
+		<action name="delArticle" class="com.phone.safe.admin.DelArticle">
+			<interceptor-ref name="testStack"></interceptor-ref> 
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">id</param>
+			</result>
+		</action>
+		
+		<!-- //添加文章接口 -->
+		<action name="addArticle" class="com.phone.safe.admin.AddArticleAction">
+			<interceptor-ref name="testStack"></interceptor-ref>
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">art</param>
+			</result>
+		</action>
+		<!-- //编辑文章接口 -->
+		<action name="editArticle" class="com.phone.safe.admin.AddArticleAction"
+		 method="edit">
+		 <interceptor-ref name="testStack"></interceptor-ref>
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">art</param>
+			</result>
+		</action>
+		
+		
+
+			
+			
+			
+        <action name="*">
+        <interceptor-ref name="testStack"></interceptor-ref> 
+        <result>/WEB-INF/Admin/{1}.html</result> 
+        </action>
+        
+        
+
+        
+        <!-- 管理员登录没有权限控制 -->
+        <action name="Adminlogin" class="com.phone.safe.admin.AdminLoginAction">
+        <result type="redirect">admin</result>
+        <result type="redirect" name="error">/loginerror.html</result>
+        </action>
+   
+    </package>
+
+
+
+	<package name="user" namespace="/user" extends="json-default">
+
+
+		<action name="Login">
+			<result>/WEB-INF/User/Login.html</result>
+		</action>
+
+
+
+	</package>
+ 
+ 
+ 
+ 
+ 
+ <package name="default" namespace="/" extends="json-default">
+  		<!-- 显示文章 -->
+		<action name="showArticle" class="com.phone.safe.api.action.GetALLArticle"
+		method="showArtitle">
+			<result type="dispatcher">/WEB-INF/content/showArt.jsp</result>
+		</action>
+ </package>
+ 
+
+
+</struts>
