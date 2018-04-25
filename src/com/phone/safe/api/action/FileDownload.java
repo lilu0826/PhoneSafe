@@ -10,9 +10,10 @@ package com.phone.safe.api.action;
 import java.io.ByteArrayInputStream;
 
 import java.io.InputStream;
-
+import java.util.Map;
 
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.phone.safe.JDBC.JDBCTools;
 
@@ -40,7 +41,10 @@ public class FileDownload extends ActionSupport {
 	
 	@Override
 	public String execute() {
-
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		if(session.get("token") != null  && this.token == null) {
+			this.token = (String) session.get("token");
+		}
 		return Action.SUCCESS;
 		
 	}

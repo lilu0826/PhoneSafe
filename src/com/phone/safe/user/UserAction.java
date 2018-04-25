@@ -79,6 +79,7 @@ public class UserAction extends ActionSupport {
     		this.flag = 1;//登录成功
     		ctx.getSession().put("isLogin",true);
     		ctx.getSession().put("LoginNum",safenum);
+    		ctx.getSession().put("token", JDBCTools.getTokenFromSafeNum(safenum));
     	}
     	else {
     		this.flag = 0;//登录失败

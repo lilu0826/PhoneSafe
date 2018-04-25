@@ -2,8 +2,7 @@ package com.phone.safe.JDBC;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.phone.safe.JavaBeans.Article;
-
-
+import com.phone.safe.JavaBeans.User;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Blob;
@@ -19,7 +18,7 @@ public class JDBCTools {
 	private static Connection getConn() {
 		
 	    String driver = "com.mysql.jdbc.Driver";
-	    String url = "jdbc:mysql://localhost:3306/phonesafe";
+	    String url = "jdbc:mysql://localhost:3306/phonesafe?useSSL=false";
 	    String username = "root";
 	    String password = "root";
 	    Connection conn = null;
@@ -433,6 +432,78 @@ public class JDBCTools {
 	}
 	
 	
+	//获取所有用户数据
+	public static List<User> getALLUser(){
+		List<User> result = new ArrayList<User>();//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select * from user_table";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	User user = new User();
+	        	user.setUser_num(rs.getString(1));
+	        	user.setUser_safe_num(rs.getString(3));
+	        	
+	        	user.setToken(rs.getString(7));
+	        	
+	        	result.add(user);
+	        	
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return result;
+	}
+	
+	/*
+	 * 删除一个用户
+	 * @param tid(文章id)
+	*/
+	public static int delUser(String num) {
+		int result = 0;
+		Connection conn = getConn();
+        String sql = "delete from user_table where user_num=?";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            pstmt.setString(1, num);
+            result = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+    return result;
+	}
+	
+	//获取用户token
+	public static String getTokenFromSafeNum(String SafeNum) {
+		String result = null;//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select user_token from user_table where user_safe_num=?";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        pstmt.setString(1, SafeNum);//设置对位标志符号
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	result = rs.getString(1);//0没有用户,需要插入,1为存在用户放入验证码
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }	
+		
+		
+		return result;
+		
+	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
 
@@ -442,7 +513,7 @@ public class JDBCTools {
 		art.setTitle("你的手机不安全");
 		art.setContent("你的手机太不安全了");*/
 		
-		System.out.println(isSafeNumExist("18280229295"));
+		System.out.println(getTokenFromSafeNum("18280229295"));
 		
 	
 	}

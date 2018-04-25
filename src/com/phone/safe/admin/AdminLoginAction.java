@@ -22,8 +22,6 @@ public class AdminLoginAction extends ActionSupport{
 		if(JDBCTools.adminLogin(this.username,this.password) == 1) {
 			ActionContext ctx = ActionContext.getContext();
 			ctx.getSession().put("username", this.username);//设置成功
-			
-			
 			return ActionSupport.SUCCESS;
 			
 		}

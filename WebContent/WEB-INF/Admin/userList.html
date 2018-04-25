@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 引入bootstrap -->
+<link href="/PhoneSafe/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/vue.js"></script> 
+<title>金大爷</title>
+
+</head>
+<body>
+	<div id="app">
+		<table class="table table-bordered" id="tab">
+		<tr>
+			<th>用户手机号</th>
+			<th>用户安全手机号</th>
+			<th>用户token</th>
+			<th>操作</th>
+		</tr>
+
+		
+		<tr v-for="(item, index) in VueData">
+			<td v-text="item.user_num"></td>
+			<td v-text="item.user_safe_num" ></td>
+			<td v-text="item.token"></td>
+			<td >
+			<a class="btn btn-default btn-sm btn-danger"  href="#" v-on:click = "test1(item.user_num,$index)" v-text="test">就</a>
+			</td>
+		</tr>
+
+	</table>
+</div>
+
+</body>
+<script type="text/javascript">
+	var Vm = new Vue({
+		el: "#app",
+		data: {
+			test: "删除",
+			value: '',
+			VueData:''
+		},
+		mounted : function(){
+			this.$nextTick(function(){
+				this.InitPage();
+			});
+		},
+		methods: {
+			test1: function(name,index){
+				//http://localhost:8080/PhoneSafe/admin/showuser?user_num=1999
+						var _this = this;
+					$.ajax({
+					url: "showuser?user_num="+name,
+					type: "get",
+					success: function(data){
+						if(data.flag == 1){
+							_this.VueData.splice(index,1);
+						}
+						else{
+							alert("删除失败！！！");
+						}
+					},
+					error:function(){
+						alert("错误了啊");
+					}
+					
+				})	
+				//alert(name);
+			},
+			InitPage: function(){
+				var _this = this;
+				$.ajax({
+					url: "showuser",
+					type: "get",
+					success: function(data){
+						_this.VueData = data.user;
+					}
+				})
+			}
+		}
+	})
+</script>
+</html>

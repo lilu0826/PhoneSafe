@@ -4,18 +4,55 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>用户主页</title>
 <!-- 引入bootstrap -->
 <link href="/PhoneSafe/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
 <script src="/PhoneSafe/bootstrap-3.3.7-dist/js/jquery-3.3.1.min.js"></script> 
 <script src="/PhoneSafe/bootstrap-3.3.7-dist/js/bootstrap.js"></script> 
+<script src="/PhoneSafe/bootstrap-3.3.7-dist/js/vue.js"></script> 
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5sj5VxG97yN5GMYYqExEl9QLS8SnaHCR"></script>
 
-
+<style type="text/css">
+#allmap {height: 600px;}
+#allmap label{max-width:none;}
+</style>
 
 </head>
 <body>
 
-	<h1>已经登录后显示的界面${sessionScope.LoginNum}</h1>
+<div class="container">
+	<div class="row">
+	<h1 align="center" id="title">登录的用户：${sessionScope.LoginNum}</h1>
+	</div>
+
+	<div class="row">
+
+			<div class="col-sm-6">
+				<div class="row">
+				<h5 style="display: inline">实时位置获取:</h5>
+				</div>
+			<div id="allmap" class="row col-sm-12"></div>
+			</div>
+			<div class="col-sm-6">
+			<div class="row">
+				<h5>图片查看（点击图片可以放大）：</h5>
+				</div>
+			<div class="row col-sm-12" >			
+			
+        <img id="Myimg" style="max-height: 400px; max-width: 300px;" 
+           src="/PhoneSafe/api/GetPicture" />
+        
+        
+			</div>
+			
+			</div>
+			
+			</div>
+			
+</div>
+
+
+
 
 
 
@@ -55,11 +92,26 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div id="img-modal" class="modal fade">
+  <div id="img-dialog" class="modal-dialog">
+    <div id="img-content" class="modal-content">
+        <img id="img-zoom" src="/PhoneSafe/api/GetPicture" style="max-height: 800px; max-width: 600px;">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 </body>
 </html>
 <script type="text/javascript">
 var countdown = 30;
 $(function(){	
+	$('#Myimg').click(function(){
+		$('#img-modal').modal();
+	});
+	
+	
+	
 	${sessionScope.isLogin? "" : "$('#yulan').modal({backdrop: 'static', keyboard: false});"}
 
 	$("#GetVerify").click(function(){
@@ -101,7 +153,7 @@ $(function(){
 		
 	});
 	
-	
+	GetPosition();
 	
 });
 
@@ -120,6 +172,7 @@ function add(){//添加文章按钮激活
 					if(data.flag == 1){
 						$('#yulan').modal('toggle');
 						alert('登录成功');
+						location.reload();//刷新页面
 						
 					}
 					else{
@@ -140,10 +193,43 @@ function add(){//添加文章按钮激活
 		$('#yulan').modal({backdrop: 'static', keyboard: false});
 		alert("验证码不能为空!");
 	}
-	
-
-	
 }
+//百度地图API功能
+var map = new BMap.Map("allmap");
+//下面的标注是
+var b = 0;
+function GetPosition(){
+	$.get("/PhoneSafe/api/GetPosition",
+			function(data){
+		if(data.flag = 1){
+			map.clearOverlays();//清楚覆盖物
+			//map.centerAndZoom("成都",15);      // 初始化地图,用城市名设置地图中心点
+			var point = new BMap.Point(data.position.X, data.position.Y);
+			if(data.position_time != b){map.centerAndZoom(point, 15);}//变化时设置
+			
+			map.enableScrollWheelZoom(true);
+
+			var marker = new BMap.Marker(point);  // 创建标注
+			map.addOverlay(marker);               // 将标注添加到地图中
+			marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+			var label = new BMap.Label("您的手机当前位置",{offset:new BMap.Size(20,-10)});
+			marker.setLabel(label); 
+			b = data.position_time;	
+		}
+		setTimeout(GetPosition, 3000);
+
+			
+	},
+	"json");
+}
+
+
+
+
+
+
+
 
 
 

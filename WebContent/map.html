@@ -25,7 +25,8 @@
 	map.addOverlay(marker);               // 将标注添加到地图中
 	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
 	
-	var label = new BMap.Label("你的手机当前位置",{offset:new BMap.Size(20,-10)});
+	var label = new BMap.Label("你的手机当前位置",{offset:new BMap.Size(20,110)});
+	label.setStyle({ width:"60px" });
 	marker.setLabel(label);
 	
 </script>

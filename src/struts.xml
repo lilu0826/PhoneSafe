@@ -159,7 +159,16 @@
 			</result>
 		</action>
 		
-		
+		<!-- //显示或删除用户 -->
+		<action name="showuser" class="com.phone.safe.admin.UserListAction">
+		 <interceptor-ref name="testStack"></interceptor-ref>
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeNullProperties">true</param>
+			<param name="excludeProperties"></param>
+			</result>
+		</action>		
 
 			
 			
@@ -183,8 +192,8 @@
 
 
 	<package name="user" namespace="/user" extends="json-default">
-		<action name="Login">
-			<result>/WEB-INF/User/Login.jsp</result>
+		<action name="index">
+			<result>/WEB-INF/User/index.jsp</result>
 		</action>
 
 		<!-- //获取验证码 -->
