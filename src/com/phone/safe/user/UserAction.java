@@ -33,12 +33,11 @@ public class UserAction extends ActionSupport {
 			    params.add(verify);
 			    params.add("10");
 			    System.out.println(verify);
-			    //SmsSingleSenderResult result = sender.sendWithParam("86", this.SafeNum, 98760, params, "", "", "");
+			    SmsSingleSenderResult result = sender.sendWithParam("86", this.safeNum, 98760, params, "", "", "");
 			    
 			    
 			    
-			    //if(result.result == 0) {
-			    if(true) {
+			    if(result.result == 0) {
 			    	//短信发送成功
 			    	ActionContext ctx = ActionContext.getContext();
 			    	ctx.getSession().put("Verify", verify);
