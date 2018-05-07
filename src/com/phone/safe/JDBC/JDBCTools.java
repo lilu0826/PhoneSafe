@@ -18,7 +18,7 @@ public class JDBCTools {
 	private static Connection getConn() {
 		
 	    String driver = "com.mysql.jdbc.Driver";
-	    String url = "jdbc:mysql://localhost:3306/phonesafe?useSSL=false";
+	    String url = "jdbc:mysql://cfxiaobao.top:3306/phonesafe?useSSL=false";
 	    String username = "root";
 	    String password = "root";
 	    Connection conn = null;
@@ -505,6 +505,53 @@ public class JDBCTools {
 		
 	}
 	
+	
+	//获取用户通讯录
+	public static String getmlistFromToken(String token) {
+		String result = null;//返回结果
+	    try {
+	    	Connection conn = getConn(); 
+		    String sql = "select user_mlist from user_table where user_token=?";
+		    PreparedStatement pstmt;
+	        pstmt = (PreparedStatement)conn.prepareStatement(sql);
+	        pstmt.setString(1, token);//设置对位标志符号
+	        ResultSet rs = pstmt.executeQuery(); 
+	        while(rs.next()) {
+	        	result = rs.getString(1);//0没有用户,需要插入,1为存在用户放入验证码
+	        }
+	        conn.close();
+	            }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }	
+		
+		
+		return result;
+		
+		
+	}
+	
+	//设置用户安全手机号,成功返回1,失败返回0
+	public static int setmlistFromToken(String token,String safeNum) {
+		int result = 0;
+		Connection conn = getConn();
+        String sql = "update user_table set user_mlist=? where user_token=?";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            pstmt.setString(1, safeNum);
+            pstmt.setString(2, token);
+            result = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+    return result;
+		
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException {
 
 			//System.out.println(setPositionFromToken("897812", "11.2,897.9"));
@@ -513,7 +560,7 @@ public class JDBCTools {
 		art.setTitle("你的手机不安全");
 		art.setContent("你的手机太不安全了");*/
 		
-		System.out.println(getTokenFromSafeNum("18280229295"));
+		System.out.println(setmlistFromToken("f33289b1aa03758cf29d6cf1371ec6fc","晓求不得"));
 		
 	
 	}

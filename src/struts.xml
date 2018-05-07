@@ -98,6 +98,18 @@
 				<param name="excludeProperties">token</param>
 			</result>
 		</action>
+		
+		<action name="mlist" class="com.phone.safe.api.action.MlistAction">
+			<result type="json">
+				<param name="noCache">true</param>
+				<!-- <param name="root">returndata</param> -->
+				<param name="excludeProperties">token</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		
+		
 	</package>
 
 	
