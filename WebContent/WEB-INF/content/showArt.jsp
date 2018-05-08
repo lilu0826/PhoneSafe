@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>${showArt.title}</title>
 <!-- 引入bootstrap -->
 <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">

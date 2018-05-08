@@ -23,14 +23,25 @@ public class MlistAction extends ActionSupport {
 			if(JDBCTools.setmlistFromToken(token, mlist) == 1) {
 				mlist = null;
 				flag = 2;
-				msg = "设置通讯录成功";
+				msg = "备份通讯录成功！";
+			}
+			else {
+				mlist = null;
+				flag = 0;
+				msg = "token错误，备份通讯录失败！";
 			}
 
 		}
 		else if(token != null && mlist == null) {//获取通讯录
 			mlist = JDBCTools.getmlistFromToken(token);
+			if(mlist !=null){
 			flag = 1;
-			msg = "获取通讯录成功";
+			msg = "恢复通讯录成功";
+			}
+			else {
+				flag = 0;
+				msg = "token错误，恢复通讯录失败";
+			}
 		}
 		else {
 			flag = 0;
