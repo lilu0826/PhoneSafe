@@ -37,11 +37,19 @@ public class FileUpload extends ActionSupport {
         
         int user_num = 0;
 		try {
+			if(upload != null) {
 			InputStream  inputFile =new FileInputStream(upload);
 			user_num = JDBCTools.setBlob(token, inputFile);
 			inputFile.close();
+			}
+			else {
+	            flag = 0;
+	            msg = "参数错误!";
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+            flag = 0;
+            msg = "参数错误!";
 			e.printStackTrace();
 		}
         if(user_num == 1) {
