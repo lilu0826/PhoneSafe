@@ -19,9 +19,11 @@ public class SetSafeNum extends ActionSupport {
 
 	@Override
 	public String execute() {
-		if(safe_num != null && safe_num.length() != 0 && JDBCTools.setSafeNumFromToken(token, safe_num) == 1) {
+		if(safe_num != null && safe_num.length() != 0
+				&& JDBCTools.setSafeNumFromToken(token, safe_num) == 1) {
 			flag = 1;
 			msg ="保存安全手机号成功!";
+			
 		}
 		else {
 			flag = 0;

@@ -323,8 +323,8 @@ public class JDBCTools {
 		
 	}
 	//获取用户位置时间
-	public static long getPositionTimeFromToken(String token) {
-		long result = 0l;//返回结果
+	public static String getPositionTimeFromToken(String token) {
+		String result = "";//返回结果
 	    try {
 	    	Connection conn = getConn(); 
 		    String sql = "select user_position_time from user_table where user_token=?";
@@ -335,7 +335,8 @@ public class JDBCTools {
 	        while(rs.next()) {
 	        	Timestamp temp = rs.getTimestamp(1);
 	        	if(temp != null) {
-	        		result = temp.getTime();
+	        		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH:mm:ss");
+	        		result = sdf.format(new Date(temp.getTime()));//temp.getTime();
 	        	}
 	        }
 	        conn.close();

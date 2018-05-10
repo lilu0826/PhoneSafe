@@ -16,7 +16,7 @@ public class GetPosition extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Map<String, String> position;//用户位置
-	private long position_time;//用户位置
+	private String position_time;//用户位置
     private String token;//用户的口令
     private int flag;//标志 
     private String msg;//提示信息 
@@ -92,7 +92,7 @@ public class GetPosition extends ActionSupport {
 
 
 
-	public long getPosition_time() {
+	public String getPosition_time() {
 		return position_time;
 	}
 

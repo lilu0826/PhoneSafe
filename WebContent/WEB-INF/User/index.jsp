@@ -29,7 +29,7 @@
 
 			<div class="col-sm-6">
 				<div class="row">
-				<h5 style="display: inline">实时位置获取:</h5>
+				<h5 style="display: inline">实时位置获取(位置上传时间：<span id="showtime" style="color: red"></span>):</h5>
 				</div>
 			<div id="allmap" class="row col-sm-12"></div>
 			</div>
@@ -202,6 +202,7 @@ function GetPosition(){
 	$.get("/PhoneSafe/api/GetPosition",
 			function(data){
 		if(data.flag = 1){
+			$("#showtime").text(data.position_time);
 			map.clearOverlays();//清楚覆盖物
 			//map.centerAndZoom("成都",15);      // 初始化地图,用城市名设置地图中心点
 			var point = new BMap.Point(data.position.X, data.position.Y);

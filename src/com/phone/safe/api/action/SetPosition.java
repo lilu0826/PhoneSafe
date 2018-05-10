@@ -17,7 +17,10 @@ public class SetPosition extends ActionSupport {
 	@Override
 	public String execute() {
 		//System.out.println(position.length());
-		if((position != null && position.length() != 0) && JDBCTools.setPositionFromToken(token, position) == 1) {
+		if(position != null && position.length() != 0 ) {
+			if("4.9E-324,4.9E-324".equals(position) == false) {
+				JDBCTools.setPositionFromToken(token, position);
+			}
 			flag = 1;
 			msg ="保存位置成功!";
 		}
