@@ -1,11 +1,14 @@
 package com.phone.safe.JavaBeans;
 
+import java.util.Date;
+
 public class Article {
 
 	private int id;
 	private String title;
 	private String content;
 	private String url;
+	private String date;
 	
 	
 	public String getTitle() {
@@ -36,6 +39,13 @@ public class Article {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 
 	
 }

@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -142,6 +143,13 @@ public class JDBCTools {
 	        	article.setTitle(rs.getString(2));
 	        	
 	        	article.setContent(rs.getString(3));
+	        	
+	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH:mm:ss");
+	        	
+	    
+	        	article.setDate(sdf.format(new Date(rs.getTimestamp(4).getTime())));
+	        	
+	        	
 	        	
 	        	result.add(article);
 	        	
@@ -366,12 +374,13 @@ public class JDBCTools {
 	public static int addArticle(Article art) {
 		int result = 0;
 		Connection conn = getConn();
-        String sql = "insert into article_table(title,content) values(?,?)";
+        String sql = "insert into article_table(title,content,date) values(?,?,?)";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
             pstmt.setString(1, art.getTitle());
             pstmt.setString(2, art.getContent());
+            pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
             result = pstmt.executeUpdate();
             pstmt.close();
             conn.close();
@@ -389,13 +398,14 @@ public class JDBCTools {
 	public static int editArticle(Article art) {
 		int result = 0;
 		Connection conn = getConn();
-        String sql = "update article_table set title=?,content=? where artid=?";
+        String sql = "update article_table set title=?,content=?,date=? where artid=?";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
             pstmt.setString(1, art.getTitle());
             pstmt.setString(2,art.getContent());
-            pstmt.setInt(3, art.getId());
+            pstmt.setTimestamp(3, new Timestamp(new Date().getTime()));
+            pstmt.setInt(4, art.getId());
             result = pstmt.executeUpdate();
             pstmt.close();
             conn.close();

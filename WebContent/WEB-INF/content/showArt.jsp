@@ -16,9 +16,10 @@
 <div class="container">
 	<div class="row">
 		<h4 align="center">${showArt.title}</h4>
-
 	</div>
-	
+	<div class="row">
+		<h6 align="center">更新时间：${showArt.date}</h6>
+	</div>
 
 	
 	
