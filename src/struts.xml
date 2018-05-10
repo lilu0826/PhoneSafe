@@ -36,7 +36,7 @@
 			<result type="json">
 			<param name="noCache">true</param>
 			<!-- <param name="root">returndata</param> -->
-			<param name="excludeProperties"></param>
+			<param name="excludeProperties">articleList.*.content,tid,showArt</param>
 			</result>
 		</action>	
 		<!-- 上传图片-->
@@ -139,6 +139,19 @@
         <action name="Login">
         	 <result>/WEB-INF/Admin/Login.jsp</result>
         </action>
+		
+		<!-- //获取文章接口 -->
+		<action name="getAllArticle" class="com.phone.safe.admin.AddArticleAction" method="getArticle">
+			<interceptor-ref name="testStack"></interceptor-ref> 
+			<result type="json">
+			<param name="noCache">true</param>
+			<!-- <param name="root">returndata</param> -->
+			<param name="excludeProperties">art,flag,article</param>
+			</result>
+		</action>
+		
+		
+		
 		
 		
 		<!-- //删除文章接口 -->

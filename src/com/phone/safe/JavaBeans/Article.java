@@ -1,8 +1,7 @@
 package com.phone.safe.JavaBeans;
 
-import java.util.Date;
 
-public class Article {
+public class Article implements Comparable<Article> {
 
 	private int id;
 	private String title;
@@ -44,6 +43,12 @@ public class Article {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+	@Override
+	public int compareTo(Article o) {
+		
+		return -this.getId() + o.getId();
+		
 	}
 
 

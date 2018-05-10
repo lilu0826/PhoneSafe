@@ -1,5 +1,9 @@
 package com.phone.safe.admin;
 
+import java.util.List;
+
+import org.apache.struts2.ServletActionContext;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import com.phone.safe.JDBC.JDBCTools;
@@ -14,6 +18,8 @@ public class AddArticleAction extends ActionSupport {
 	
 	private Article art;
 	private int flag;
+	private List<Article> articleList;
+	
 	
 	public String execute() {
 		if(JDBCTools.addArticle(art) == 1) {
@@ -42,6 +48,21 @@ public class AddArticleAction extends ActionSupport {
 		
 	}
 	
+	public String getArticle() {
+		 this.articleList = JDBCTools.getALLArticle();
+		String ip = ServletActionContext.getRequest().getServerName();
+		//System.out.println(ip);
+		for (Article article : articleList) {
+			
+			article.setUrl("http://"+ip+":8080/PhoneSafe/showArticle?tid="+article.getId());
+		}
+		
+
+
+		
+		
+		return Action.SUCCESS;
+	}
 	
 	
 	
@@ -50,6 +71,10 @@ public class AddArticleAction extends ActionSupport {
 	
 	
 	
+	public List<Article> getArticleList() {
+		return articleList;
+	}
+
 	public int getFlag() {
 		return flag;
 	}
