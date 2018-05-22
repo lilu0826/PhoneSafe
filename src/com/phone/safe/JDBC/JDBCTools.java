@@ -1,39 +1,40 @@
 package com.phone.safe.JDBC;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 import com.phone.safe.JavaBeans.Article;
 import com.phone.safe.JavaBeans.User;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 public class JDBCTools {
 	//获取数据库连接
 	private static Connection getConn() {
-		
-	    String driver = "com.mysql.jdbc.Driver";
-	    String url = "jdbc:mysql://cfxiaobao.top:3306/phonesafe?useSSL=false";
-	    String username = "root";
-	    String password = "root";
-	    Connection conn = null;
-	    try {
-	        Class.forName(driver); //classLoader,加载对应驱动
-	        conn = (Connection) DriverManager.getConnection(url, username, password);
-	    } catch (ClassNotFoundException e) {
-	        e.printStackTrace();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return conn;
+	    Connection result = null;
+		InitialContext ctx;
+		try {
+			ctx = new InitialContext();
+			DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/Mysql");
+			result = ds.getConnection();
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 	
 	//检查手机号是否存在,存在就修改用户验证码,不存在就创建一天记录1成功0失败
@@ -574,7 +575,7 @@ public class JDBCTools {
 		art.setTitle("你的手机不安全");
 		art.setContent("你的手机太不安全了");*/
 		
-		System.out.println(setmlistFromToken("f33289b1aa03758cf29d6cf1371ec6fc","晓求不得"));
+		System.out.println(getALLArticle());
 		
 	
 	}
